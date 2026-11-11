@@ -14,7 +14,7 @@ No ROM comes with this patch. You need your own legally obtained copy of the gam
 
 1. Open the patcher page.
 2. Choose your USA 1.0 ROM. `.z64`, `.n64` and `.v64` files all work. The ROM stays on your computer, and the page does not upload or store it.
-3. Your browser saves `OoT HFR.z64`. Your original file does not change.
+3. Your browser saves `OoT HFR (fork).z64` on the fork page (`OoT HFR.z64` on the original page). Your original file does not change.
 4. Copy that file to your flash cart, or open it in an emulator.
 
 The patcher rejects any other version of the game. It checks your ROM and the result by MD5.

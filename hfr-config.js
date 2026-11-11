@@ -1,6 +1,6 @@
 const HFR_CONFIG = {
 	targetMd5: 'a7a3528afce3d04a36534a9854ae343e',
-	outputName: 'OoT HFR.z64',
+	outputName: 'OoT HFR (fork).z64',
 	// Optional add-ons applied on top of the HFR ROM, built by tools/build_options.py
 	options: [
 		{ id: 'normal-aim', file: 'options/normal-aim.hfro', label: 'Normal aim', info: 'Un-inverts vertical aiming: pushing the stick up aims up. Covers first-person aiming with the bow, slingshot and hookshot, the C-up view, and aiming a ranged item in third person. Off keeps the original inverted aim.', checked: true },
