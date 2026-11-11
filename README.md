@@ -4,7 +4,9 @@ Early test release.
 
 A fan patch that runs The Legend of Zelda: Ocarina of Time (USA 1.0) at higher frame rates on N64 hardware. Game logic stays at the original 20 updates per second, so the game does not run faster.
 
-**Patcher page: https://64-bites.github.io/oot-hfr/**
+> **This is a fork** of [64-bites/oot-hfr](https://github.com/64-bites/oot-hfr). It adds two optional ROM changes, normal (non-inverted) aim and faster text. See [Fork options](#fork-options). Fork patcher page: **https://abarchin.github.io/oot-hfr/**
+
+**Original patcher page: https://64-bites.github.io/oot-hfr/**
 
 No ROM comes with this patch. You need your own legally obtained copy of the game. This project is free, and it is not affiliated with or endorsed by Nintendo.
 

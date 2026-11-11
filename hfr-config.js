@@ -3,8 +3,8 @@ const HFR_CONFIG = {
 	outputName: 'OoT HFR.z64',
 	// Optional add-ons applied on top of the HFR ROM, built by tools/build_options.py
 	options: [
-		{ id: 'normal-aim', file: 'options/normal-aim.hfro', label: 'Normal aim', info: 'Pushing the stick up aims up in first person, C-up view and ranged aiming. Off keeps the original inverted aim.', checked: true },
-		{ id: 'fast-text', file: 'options/fast-text.hfro', label: 'Faster text', info: 'Text appears twice as fast.', checked: true }
+		{ id: 'normal-aim', file: 'options/normal-aim.hfro', label: 'Normal aim', info: 'Un-inverts vertical aiming: pushing the stick up aims up. Covers first-person aiming with the bow, slingshot and hookshot, the C-up view, and aiming a ranged item in third person. Off keeps the original inverted aim.', checked: true },
+		{ id: 'fast-text', file: 'options/fast-text.hfro', label: 'Faster text', info: 'Text appears twice as fast, the same change as Patcher64+\'s 2x Text Speed. Ruto\'s confession stays at normal speed, and the pauses after Phantom Ganon\'s defeat are longer, to keep their timing.', checked: true }
 	],
 	// MD5 of the result for each combination: chosen option ids, sorted and joined with '+'
 	optionMd5: {

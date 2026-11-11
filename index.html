@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OoT HFR Patcher</title>
+<title>OoT HFR Patcher (fork)</title>
 <style>
 :root { --bg: #14171c; --panel: #1e232b; --text: #e8eaed; --muted: #a4abb6; --accent: #e0b84c; --ok: #7bc47f; --bad: #ef8a80; }
 @media (prefers-color-scheme: light) { :root { --bg: #f4f2ec; --panel: #ffffff; --text: #1d2125; --muted: #5a616b; --accent: #8a6a10; --ok: #2c7a33; --bad: #b3362a; } }
@@ -29,10 +29,12 @@ a { color: var(--accent); }
 </head>
 <body>
 <main>
-<h1>OoT HFR Patcher</h1>
+<h1>OoT HFR Patcher (fork)</h1>
 <p>Runs Ocarina of Time at 20, up to 30 or up to 60 fps on N64 hardware, with game speed unchanged. You choose the rate on the file select screen or in the pause menu.</p>
+<p class="muted">This is a fork of <a href="https://github.com/64-bites/oot-hfr">64-bites/oot-hfr</a>, not the official patcher. It applies the same HFR v0.5.0 patch, then adds the options below. Turn both off to get the original HFR ROM. Source and details: <a href="https://github.com/abarchin/oot-hfr">abarchin/oot-hfr</a>.</p>
 <div class="panel">
-<strong>Options</strong>
+<strong>Extra changes in this fork</strong>
+<p class="muted">Each option is a small patch applied on top of HFR. Both are on by default.</p>
 <div id="options"></div>
 </div>
 <div class="panel">
