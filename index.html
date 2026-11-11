@@ -22,12 +22,19 @@ input[type=file] { position: absolute; opacity: 0; width: 1px; height: 1px; }
 #status.bad { color: var(--bad); }
 ul { margin: 0; padding-left: 20px; }
 a { color: var(--accent); }
+.opt { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; cursor: pointer; }
+.opt input { margin-top: 5px; accent-color: var(--accent); }
+.opt span { display: block; }
 </style>
 </head>
 <body>
 <main>
 <h1>OoT HFR Patcher</h1>
 <p>Runs Ocarina of Time at 20, up to 30 or up to 60 fps on N64 hardware, with game speed unchanged. You choose the rate on the file select screen or in the pause menu.</p>
+<div class="panel">
+<strong>Options</strong>
+<div id="options"></div>
+</div>
 <div class="panel">
 <label class="pick">Choose your USA 1.0 ROM (.z64, .n64 or .v64)<input type="file" id="rom" accept=".z64,.n64,.v64"></label>
 <div id="status" role="status">Your ROM stays on this computer. Nothing is uploaded.</div>
@@ -78,6 +85,39 @@ a { color: var(--accent); }
 			throw new HfrInstall.InstallError('NO_PATCH', 'The patch file could not be loaded. Please try again.');
 		return new Uint8Array(await response.arrayBuffer());
 	};
+	// Builds the option checkboxes from the config
+	const optionsBox = document.getElementById('options');
+	HFR_CONFIG.options.forEach(function (o) {
+		const label = document.createElement('label');
+		label.className = 'opt';
+		const box = document.createElement('input');
+		box.type = 'checkbox';
+		box.id = 'opt-' + o.id;
+		box.checked = o.checked;
+		const text = document.createElement('span');
+		const name = document.createElement('strong');
+		name.textContent = o.label;
+		const info = document.createElement('span');
+		info.className = 'muted';
+		info.textContent = o.info;
+		text.append(name, info);
+		label.append(box, text);
+		optionsBox.appendChild(label);
+	});
+	// The single-file build can hold option patches in the page as HFR_OPTION_BASE64[id]
+	const loadOption = async function (o) {
+		if (typeof HFR_OPTION_BASE64 === 'object' && typeof HFR_OPTION_BASE64[o.id] === 'string') {
+			const text = atob(HFR_OPTION_BASE64[o.id]);
+			const bytes = new Uint8Array(text.length);
+			for (let i = 0; i < text.length; i++)
+				bytes[i] = text.charCodeAt(i);
+			return bytes;
+		}
+		const response = await fetch(o.file);
+		if (!response.ok)
+			throw new HfrInstall.InstallError('NO_PATCH', 'An option patch file could not be loaded. Please try again.');
+		return new Uint8Array(await response.arrayBuffer());
+	};
 	document.getElementById('rom').addEventListener('change', async function (event) {
 		const file = event.target.files[0];
 
@@ -88,7 +128,11 @@ a { color: var(--accent); }
 		try {
 			const romBytes = new Uint8Array(await file.arrayBuffer());
 			const patchBytes = await loadPatch();
-			const result = HfrInstall.install(romBytes, patchBytes, HFR_CONFIG.targetMd5, { BinFile, VCDIFF });
+			const chosen = HFR_CONFIG.options.filter(function (o) { return document.getElementById('opt-' + o.id).checked; });
+			const options = [];
+			for (const o of chosen)
+				options.push({ id: o.id, bytes: await loadOption(o) });
+			const result = HfrInstall.installWithOptions(romBytes, patchBytes, HFR_CONFIG.targetMd5, options, HFR_CONFIG.optionMd5, { BinFile, VCDIFF });
 
 			save(result.rom, HFR_CONFIG.outputName);
 			show('Done. Your browser saved ' + HFR_CONFIG.outputName + '. Your original file was not changed.', 'ok');

@@ -65,7 +65,50 @@
 		return { rom: patched._u8array, byteOrder: order };
 	};
 
-	const api = { SOURCE_MD5, InstallError, detectByteOrder, toZ64, install };
+	/* Writes one .hfro add-on into rom (Uint8Array, changed in place). Format, big endian:
+	   "HFRO", u32 version 1, u32 run count, then per run u32 offset, u32 length, bytes. */
+	const applyOption = function (rom, patchBytes) {
+		const view = new DataView(patchBytes.buffer, patchBytes.byteOffset, patchBytes.byteLength);
+		const bad = function () {
+			return new InstallError('BAD_OPTION', 'An option patch file is damaged. Please try again.');
+		};
+		let p = 12;
+		let i;
+
+		if (patchBytes.length < 12 || String.fromCharCode(patchBytes[0], patchBytes[1], patchBytes[2], patchBytes[3]) !== 'HFRO' || view.getUint32(4) !== 1)
+			throw bad();
+		const count = view.getUint32(8);
+		for (i = 0; i < count; i++) {
+			if (p + 8 > patchBytes.length)
+				throw bad();
+			const offset = view.getUint32(p);
+			const length = view.getUint32(p + 4);
+			if (p + 8 + length > patchBytes.length || offset + length > rom.length)
+				throw bad();
+			rom.set(patchBytes.subarray(p + 8, p + 8 + length), offset);
+			p += 8 + length;
+		}
+	};
+
+	/* Runs install, then applies the chosen add-ons. options: [{ id, bytes }]. optionMd5 maps the
+	   sorted ids joined with '+' to the expected MD5 of the result. */
+	const installWithOptions = function (romBytes, patchBytes, targetMd5, options, optionMd5, tools) {
+		const result = install(romBytes, patchBytes, targetMd5, tools);
+
+		if (options.length === 0)
+			return result;
+		const key = options.map(function (o) { return o.id; }).sort().join('+');
+		const expected = optionMd5[key];
+		if (!expected)
+			throw new InstallError('BAD_OPTION', 'This combination of options is not supported.');
+		const rom = new Uint8Array(result.rom);
+		options.forEach(function (o) { applyOption(rom, o.bytes); });
+		if (new tools.BinFile(rom.buffer).hashMD5() !== expected)
+			throw new InstallError('BAD_RESULT', 'The patched ROM failed its check, so it was not saved. Please report this.');
+		return { rom: rom, byteOrder: result.byteOrder };
+	};
+
+	const api = { SOURCE_MD5, InstallError, detectByteOrder, toZ64, install, applyOption, installWithOptions };
 
 	if (typeof module !== 'undefined' && module.exports)
 		module.exports = api;

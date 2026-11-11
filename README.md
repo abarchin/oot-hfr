@@ -19,6 +19,24 @@ The patcher rejects any other version of the game. It checks your ROM and the re
 
 To use your own patcher, take the BPS file from the Releases page and apply it to a `.z64` ROM.
 
+## Fork options
+
+This fork adds two options to the patcher page, both on by default:
+
+| Option | What it does |
+|---|---|
+| Normal aim | Pushing the stick up aims up instead of down. It covers first-person aiming with the bow, slingshot and hookshot, the C-up view, and aiming a ranged item in third person. Turn it off for the original inverted aim. |
+| Faster text | Text appears twice as fast, the same change as Patcher64+'s "2x Text Speed". Ruto's confession stays at normal speed, and the pauses after Phantom Ganon's defeat are longer, to keep their timing. |
+
+The options are small `.hfro` patches in `options/` that the page applies after the HFR patch. `tools/build_options.py` builds them from the HFR ROM and lists each edit with its offset. The options do not touch the first 1 MiB of the ROM, so the boot checksum does not change. The patcher checks each result by MD5:
+
+| Options | MD5 |
+|---|---|
+| None | `a7a3528afce3d04a36534a9854ae343e` |
+| Normal aim | `240cc199490674141626911c31eba87f` |
+| Faster text | `70f4182dbcc0779b4e8ddd7a1fb259d1` |
+| Both | `f300d71debbfc0e67aff45c34aa7bd05` |
+
 ## Requirements
 
 - USA 1.0 ROM, MD5 `5bd1fe107bf8106b2ab6650abecd54d6` (`.z64` byte order). The patched ROM has MD5 `a7a3528afce3d04a36534a9854ae343e`.
